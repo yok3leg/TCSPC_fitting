@@ -34,7 +34,7 @@ def main():
     lifetime()
 
 def lifetime():
-    st.info('&rarr; Download DEMO data: ')
+    st.info('&rarr; Documents and DEMO data can be found here: https://github.com/yok3leg/TCSPC_fitting')
     fluor_buffer = st.file_uploader('Fluorescence lifetime decay', 'txt')
     if fluor_buffer is not None:
         fluor, timestep_ns = lf.tcspc.read_decay(io.TextIOWrapper(fluor_buffer), 'Horiba')
