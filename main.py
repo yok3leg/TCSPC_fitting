@@ -30,6 +30,7 @@ def to_base64(df):
 
 def main():
     st.title('TCSPC fitting')
+    st.sidebar.image('https://github.com/yok3leg/TCSPC_fitting/blob/main/logo.png?raw=true', width=300)
     st.markdown('This software is inspired by https://github.com/fdsteffen/Lifefit/ (https://pubs.rsc.org/en/content/articlelanding/2016/CP/C6CP04277E)') 
     lifetime()
 
