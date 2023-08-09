@@ -52,7 +52,8 @@ def lifetime():
             else:
                 irf = None
                 irf_buffer = False
-                gauss_sigma = st.number_input('IRF sigma', min_value=0.00, value=0.10, step=0.01, format='%0.2f')
+                st.latex(r'''I_{IRF} = I_0\exp{(\frac{-(t-t_0)^2}{2\sigma^2})}''')
+                gauss_sigma = st.number_input('IRF sigma', min_value=0.000, value=0.100, step=0.001, format='%0.3f')
         st.write('---')
 
     if (fluor_buffer is not None) and (irf_buffer is not None): 
