@@ -17,8 +17,9 @@ def fit_LifeData(fluor_life, tau0):
 
 def get_LifeFitparams(fluor_life, n_decays):
     fit_parameters = pd.DataFrame(fluor_life.fit_param, columns=['tau', 'ampl'])
-    fit_parameters['tau'] = ['{:0.2f} +/- {:0.2f}'.format(val,err) for val, err in zip(fluor_life.fit_param['tau'], fluor_life.fit_param_std['tau'])]
-    fit_parameters['ampl'] = ['{:0.2f}'.format(val) for val in fluor_life.fit_param['ampl']]
+    fit_parameters['tau'] = ['{:0.3f} +/- {:0.3f}'.format(val,err) for val, err in zip(fluor_life.fit_param['tau'], fluor_life.fit_param_std['tau'])]
+    fit_parameters['ampl'] = ['{:0.3f}'.format(val) for val in fluor_life.fit_param['ampl']]
+    #st.write(fluor_life.fit_param) # for debug
     fit_parameters.index = ['tau{:d}'.format(i+1) for i in range(n_decays)]
     fit_parameters = fit_parameters._append(pd.DataFrame({'tau':'{:0.2f} +/- {:0.2f}'.format(fluor_life.av_lifetime,fluor_life.av_lifetime_std), 'ampl':'-'}, index=['weighted tau']))
     fit_parameters.columns = ['lifetime (ns)', 'weight']
