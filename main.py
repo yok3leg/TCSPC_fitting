@@ -67,7 +67,17 @@ def lifetime():
             for i in range(n_decays):
                 tau0.append(st.sidebar.number_input('tau{:d}'.format(i+1), value=float(10**i), step=float(10**(i-1)), format='%0.{prec}f'.format(prec=max(1-i, 0))))
 
-            fluor_life = lf.tcspc.Lifetime(fluor, timestep_ns, irf, gauss_sigma=gauss_sigma)
+            change_area = st.checkbox('Change fitting area (Experimental)')
+            if change_area == True:
+                xlimits = st.slider('Select a time limits (ns) on the x-axis', float(1*timestep_ns), float(len(fluor)*timestep_ns), (float(1*timestep_ns), float(len(fluor)*timestep_ns)), format='%0.01f ns')
+                bin_start = round(xlimits[0]/timestep_ns)
+                bin_stop = round(xlimits[1]/timestep_ns)
+                print(bin_start)
+                print(bin_stop)
+                fluor_life = lf.tcspc.Lifetime(fluor[bin_start:bin_stop], timestep_ns, irf, gauss_sigma=gauss_sigma)
+            else:
+                fluor_life = lf.tcspc.Lifetime(fluor, timestep_ns, irf, gauss_sigma=gauss_sigma)
+            
             with st.spinner('Fitting...'):
                 try:
                     fluor_life = fit_LifeData(fluor_life, tau0)
