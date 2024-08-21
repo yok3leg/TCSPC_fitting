@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from lmfit import Model, Parameters
 
 # Define n-exponential decay function
