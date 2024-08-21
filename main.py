@@ -2,7 +2,7 @@ import streamlit as st
 import numpy as np
 import math
 import pandas as pd
-import Mode1_exponential_decay_lmfit_QuTAG_MC as Mode1
+import Mode1_exponential_decay_lmfit as Mode1
 
 # Comments
 # alignment
@@ -61,7 +61,7 @@ def convert_csv(df):
 ########################################### Home Page ############################################
 
 st.title('QLAB Lifetime Tools') # page title
-analyze_mode = st.sidebar.selectbox("Select method",["None","Exponential decay lmfit QuTAG MC","TDC7200","Coming soon"]) # mode selection
+analyze_mode = st.sidebar.selectbox("Select method",["None","Exponential decay lmfit","TDC7200","Coming soon"]) # mode selection
 
 if analyze_mode == "None": # Homepage
     st.markdown("Please select analyzing tool")
@@ -69,18 +69,22 @@ if analyze_mode == "None": # Homepage
 
 ########################################### Exponential decay lmfit QuTAG MC ############################################
 
-elif analyze_mode == "Exponential decay lmfit QuTAG MC": # Mode1
+elif analyze_mode == "Exponential decay lmfit": # Mode1
     st.markdown("***Note:*** Fitted Data must be multiplied with *bin width (ns)*")
     n_components = st.sidebar.number_input("Number of decay components", value=1,step=1,max_value=4,min_value=1) # select number of exp component
 
     #### Upload area####
-    uploaded_files = st.file_uploader("Choose a txt file from QuTAG_MC", accept_multiple_files=True) # create upload box
+    file_type = st.selectbox("Select File Type",['QuTAG MC','TDC7200'])
+    uploaded_files = st.file_uploader("Choose a txt file", accept_multiple_files=True) # create upload box
     if uploaded_files: # if there is/are file(s) uploaded
         tot_file = len(uploaded_files)
         # st.write(str(tot_file)+' files uploaded') # for checking total files
         decay = [] #
         for file_name in uploaded_files: # read all files
-            data = np.loadtxt(file_name, skiprows = 5, delimiter = ';') 
+            if file_type == 'QuTAG MC':
+                data = np.loadtxt(file_name, skiprows = 5, delimiter = ';') 
+            elif file_type == 'TDC7200':
+                data = np.loadtxt(file_name, skiprows = 5, delimiter = ';') # TODO: TDC7200 compatible
             decay.append(fl_decay(file_name=file_name.name, decay_data=data[:,1])) # store in the fl_decay class
         data_len = len(data[:,1])
 
@@ -92,7 +96,7 @@ elif analyze_mode == "Exponential decay lmfit QuTAG MC": # Mode1
                 decay[decay_id].update()
 
         #### Time alignment ####
-        en_shift = st.sidebar.selectbox("Alignment",["None","Align Peak","Edge20","Edge50","Edge80"])
+        en_shift = st.sidebar.selectbox("Alignment",["None","Align Peak","Edge20","Edge50","Edge80"]) #TODO add mode "Edge20","Edge50","Edge80"
         if en_shift == 'None':
             peak_temp = 0
         elif en_shift == 'Align Peak': 
@@ -103,7 +107,7 @@ elif analyze_mode == "Exponential decay lmfit QuTAG MC": # Mode1
             for decay_id in range(tot_file): # align every data to most left peak
                 decay[decay_id].decay_data = shift(decay[decay_id].decay_data,peak_temp-decay[decay_id].peak, fill_value=0)
                 decay[decay_id].update()
-        elif en_shift == 'Edge20': #TODO "Edge20","Edge50","Edge80"
+        elif en_shift == 'Edge20': 
             peak_temp = 0
         elif en_shift == 'Edge50':
             peak_temp = 0
