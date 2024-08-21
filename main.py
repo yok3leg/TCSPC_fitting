@@ -109,7 +109,7 @@ elif analyze_mode == "Exponential decay lmfit QuTAG MC": # Mode1
             peak_temp = 0
 
         #### BG window ####
-        en_BG_window = st.sidebar.checkbox('Manual BG window', value=True)
+        en_BG_window = st.sidebar.checkbox('Manual BG window', value=False)
         if en_BG_window:
             start_BG_bin, stop_BG_bin = st.slider('Select BG window', min_value=0,max_value=data_len,step=1,value=(0,20))
             plot_bg = np.empty((0,stop_BG_bin-start_BG_bin))
