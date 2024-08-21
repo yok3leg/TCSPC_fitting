@@ -147,7 +147,7 @@ elif analyze_mode == "Exponential decay lmfit QuTAG MC": # Mode1
         tab = st.tabs([decay[decay_id].file_name for decay_id in range(tot_file)])
         for decay_id in range(tot_file):
             with tab[decay_id]:
-                st.write(decay[decay_id].result)
+                st.text(decay[decay_id].result.fit_report())
                 st.download_button(label='Download '+'Report '+decay[decay_id].file_name, data=decay[decay_id].result.fit_report(),file_name='Report_'+decay[decay_id].file_name)
 ######################################## End of Exponential decay lmfit QuTAG MC #########################################
 
