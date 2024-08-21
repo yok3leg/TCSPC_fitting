@@ -141,7 +141,7 @@ elif analyze_mode == "Exponential decay lmfit QuTAG MC": # Mode1
         plot_data = pd.DataFrame(data=np.transpose(plot_data),columns=columns) # convert to dataframe
         csv = convert_csv(plot_data) # convert to UTF8
         st.line_chart(plot_data) # plot data frame
-        st.download_button(label='Download fitted data', data=csv, file_name='test.csv',mime="text/csv")      
+        st.download_button(label='Download fitted data', data=csv, file_name='Fitted_data.csv',mime="text/csv")      
 
         #### Report result ####
         tab = st.tabs([decay[decay_id].file_name for decay_id in range(tot_file)])
