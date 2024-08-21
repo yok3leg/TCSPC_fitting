@@ -58,14 +58,16 @@ def convert_csv(df):
     # IMPORTANT: Cache the conversion to prevent computation on every rerun
     return df.to_csv().encode("utf-8")
 
-########################################### End of Custom Function ############################################
+########################################### Home Page ############################################
 
 st.title('QLAB Lifetime Tools') # page title
-analyze_mode = st.sidebar.selectbox("Select method",["None","Exponential decay lmfit QuTAG MC","TDC7200","Coming soon","Coming soon"]) # mode selection
+analyze_mode = st.sidebar.selectbox("Select method",["None","Exponential decay lmfit QuTAG MC","TDC7200","Coming soon"]) # mode selection
 
-########################################### Exponential decay lmfit QuTAG MC ############################################
 if analyze_mode == "None": # Homepage
     st.markdown("Please select analyzing tool")
+
+
+########################################### Exponential decay lmfit QuTAG MC ############################################
 
 elif analyze_mode == "Exponential decay lmfit QuTAG MC": # Mode1
     st.markdown("***Note:*** Fitted Data must be multiplied with *bin width (ns)*")
@@ -149,7 +151,14 @@ elif analyze_mode == "Exponential decay lmfit QuTAG MC": # Mode1
             with tab[decay_id]:
                 st.text(decay[decay_id].result.fit_report())
                 st.download_button(label='Download '+'Report '+decay[decay_id].file_name, data=decay[decay_id].result.fit_report(),file_name='Report_'+decay[decay_id].file_name)
-######################################## End of Exponential decay lmfit QuTAG MC #########################################
+
+################################################### TDC7200 ####################################################
+
+elif analyze_mode == "TDC7200":
+    st.markdown("Coming soon")
+
+elif analyze_mode == "Coming soon":
+    st.markdown("Coming soon")
 
 
 
