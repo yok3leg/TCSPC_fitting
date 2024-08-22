@@ -9,7 +9,6 @@ import myfunctions
 import lifetime_spectro_analysis
 
 st.title("Exponential decay lmfit")
-st.markdown("***Note:*** Fitted Data must be multiplied with *bin width (ns)*")
 
 #### Upload area####
 col1, col2 = st.columns(2)
