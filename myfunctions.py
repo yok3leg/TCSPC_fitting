@@ -37,7 +37,7 @@ def lifetme_spectro_upload(file_name, file_type):
         data = np.loadtxt(file_name, skiprows = 0, delimiter = '\t') # TODO: PicoHarp compatible
     return data
 
-def draw_result(lmfit_result_items):
+def draw_result(lmfit_result_items,h):
     A = np.array([])
     name_A = np.array([])
     tau = np.array([])
@@ -47,7 +47,7 @@ def draw_result(lmfit_result_items):
             A = np.append(A,param.value)
             name_A = np.append(name_A,name)
         elif 'tau' in name:
-            tau = np.append(tau,param.value)
+            tau = np.append(tau,param.value*h)
             name_tau = np.append(name_tau,name)
     col1, col2 = st.columns(2)
     with col1:

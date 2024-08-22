@@ -12,9 +12,13 @@ st.title("Exponential decay lmfit")
 st.markdown("***Note:*** Fitted Data must be multiplied with *bin width (ns)*")
 
 #### Upload area####
-file_type = st.selectbox("Select File Type",['QuTAG MC','TDC7200','PicoHarp'])
+col1, col2 = st.columns(2)
+with col1:
+    file_type = st.selectbox("Select File Type",['QuTAG MC','TDC7200','PicoHarp'])
+with col2:
+    h = st.number_input(label='Bin width (ps)',min_value=0,step=1,value=0)/1000 # bin width in ns
 uploaded_files = st.file_uploader("Choose a txt file", accept_multiple_files=True) # create upload box
-if uploaded_files: # if there is/are file(s) uploaded
+if uploaded_files and h != 0: # if there is/are file(s) uploaded
     n_components = st.sidebar.number_input("Number of decay components", value=1,step=1,max_value=4,min_value=1) # select number of exp component
     tot_file = len(uploaded_files)
     # st.write(str(tot_file)+' files uploaded') # for checking total files
@@ -94,7 +98,7 @@ if uploaded_files: # if there is/are file(s) uploaded
     tab = st.tabs([decay[decay_id].file_name for decay_id in range(tot_file)])
     for decay_id in range(tot_file):
         with tab[decay_id]:
-            myfunctions.draw_result(decay[decay_id].result.params.items())
+            myfunctions.draw_result(decay[decay_id].result.params.items(),h)
             with st.expander("Fit Report"):
                 st.text(decay[decay_id].result.fit_report())
             st.download_button(label='Download '+'Report '+decay[decay_id].file_name, data=decay[decay_id].result.fit_report(),file_name='Report_'+decay[decay_id].file_name)
