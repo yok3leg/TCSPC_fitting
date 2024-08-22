@@ -12,12 +12,12 @@ import myfunctions
 
 st.title("FLIM")
 st.markdown("This analysis uses Liftfit (https://lifefit.readthedocs.io/en/latest/index.html)")
-n_components = st.sidebar.number_input("Number of decay components", value=1,step=1,max_value=4,min_value=1) # select number of exp component
 
 #### Upload area####
 file_type = st.selectbox("Select File Type",['QuTAG MC','TDC7200','PicoHarp'])
 uploaded_files = st.file_uploader("Choose a txt file", accept_multiple_files=True) # create upload box
 if uploaded_files: # if there is/are file(s) uploaded
+    n_components = st.sidebar.number_input("Number of decay components", value=1,step=1,max_value=4,min_value=1) # select number of exp component
     tot_file = len(uploaded_files)
     # st.write(str(tot_file)+' files uploaded') # for checking total files
     decay = [] #
@@ -29,5 +29,5 @@ if uploaded_files: # if there is/are file(s) uploaded
     except:
         st.error('File type error')
         st.stop()
+
     
-    #TODO continue work from here

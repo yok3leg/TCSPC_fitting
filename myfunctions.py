@@ -2,6 +2,7 @@
 import streamlit as st
 import numpy as np
 import plotly.express as px
+import pandas as pd
 
 ######## Functions ############
 
@@ -35,6 +36,30 @@ def lifetme_spectro_upload(file_name, file_type):
     elif file_type == 'PicoHarp':
         data = np.loadtxt(file_name, skiprows = 0, delimiter = '\t') # TODO: PicoHarp compatible
     return data
+
+def draw_result(lmfit_result_items):
+    A = np.array([])
+    name_A = np.array([])
+    tau = np.array([])
+    name_tau = np.array([])
+    for name, param in lmfit_result_items:
+        if 'A' in name:
+            A = np.append(A,param.value)
+            name_A = np.append(name_A,name)
+        elif 'tau' in name:
+            tau = np.append(tau,param.value)
+            name_tau = np.append(name_tau,name)
+    col1, col2 = st.columns(2)
+    with col1:
+        # pie amplitude
+        df = pd.DataFrame(data=A,columns=['A'])
+        fig = px.pie(df, values='A',names=name_A,width=300,color_discrete_sequence=px.colors.qualitative.Pastel)
+        st.plotly_chart(fig)
+    with col2:    
+        # bar tau
+        df2 = pd.DataFrame(data=tau,columns=['tau'],index=name_tau)
+        fig = px.bar(df2, y='tau',width=300,color_discrete_sequence=px.colors.qualitative.Pastel_r)
+        st.plotly_chart(fig)    
 
 ######## Class fluorescnce decay ############
 

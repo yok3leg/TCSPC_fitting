@@ -10,12 +10,12 @@ import lifetime_spectro_analysis
 
 st.title("Exponential decay lmfit")
 st.markdown("***Note:*** Fitted Data must be multiplied with *bin width (ns)*")
-n_components = st.sidebar.number_input("Number of decay components", value=1,step=1,max_value=4,min_value=1) # select number of exp component
 
 #### Upload area####
 file_type = st.selectbox("Select File Type",['QuTAG MC','TDC7200','PicoHarp'])
 uploaded_files = st.file_uploader("Choose a txt file", accept_multiple_files=True) # create upload box
 if uploaded_files: # if there is/are file(s) uploaded
+    n_components = st.sidebar.number_input("Number of decay components", value=1,step=1,max_value=4,min_value=1) # select number of exp component
     tot_file = len(uploaded_files)
     # st.write(str(tot_file)+' files uploaded') # for checking total files
     decay = [] #
@@ -90,9 +90,12 @@ if uploaded_files: # if there is/are file(s) uploaded
     st.download_button(label='Download fitted data', data=csv, file_name='Fitted_data.csv',mime="text/csv")      
 
     #### Report result ####
+    st.header('Fit report')
     tab = st.tabs([decay[decay_id].file_name for decay_id in range(tot_file)])
     for decay_id in range(tot_file):
         with tab[decay_id]:
-            st.text(decay[decay_id].result.fit_report())
+            myfunctions.draw_result(decay[decay_id].result.params.items())
+            with st.expander("Fit Report"):
+                st.text(decay[decay_id].result.fit_report())
             st.download_button(label='Download '+'Report '+decay[decay_id].file_name, data=decay[decay_id].result.fit_report(),file_name='Report_'+decay[decay_id].file_name)
 

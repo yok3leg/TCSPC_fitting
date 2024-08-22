@@ -6,6 +6,10 @@ def irf_convolution(params, t, irf, decay_func):
     decay = decay_func(t, params)
     return np.convolve(decay, irf, mode='full')[:len(t)]
 
+def gaussian_irf(t, t0, width):
+    """Generate a Gaussian IRF."""
+    return np.exp(-0.5 * ((t - t0) / width)**2)
+
 def decay_model(t, params):
     """Example single exponential decay model."""
     amplitude = params['amplitude']
