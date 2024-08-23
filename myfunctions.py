@@ -30,12 +30,26 @@ def convert_csv(df):
 
 def lifetme_spectro_upload(file_name, file_type):
     if file_type == 'QuTAG MC':
-        data = np.loadtxt(file_name, skiprows = 5, delimiter = ';') 
+        data_temp = np.loadtxt(file_name, skiprows = 5, delimiter = ';') 
+        data = data_temp[:,1]
+        h = (data_temp[1,0]-data_temp[0,0])*1000000000
     elif file_type == 'TDC7200':
-        data = np.loadtxt(file_name, skiprows = 10, delimiter = '\t') 
+        data_temp = np.loadtxt(file_name, skiprows = 10, delimiter = '\t') 
+        data = data_temp[:,1]
+        h = 0.055
     elif file_type == 'PicoHarp':
-        data = np.loadtxt(file_name, skiprows = 0, delimiter = '\t') # TODO: PicoHarp compatible
-    return data
+        data = np.loadtxt(file_name, skiprows = 0) # TODO: PicoHarp compatible
+        h = 0.004
+    return data, h
+
+def check_h(decay,tot_file):
+    chk = False
+    h = decay[0].h
+    for i in range(tot_file):
+        if decay[i].h != h:
+            chk = True
+            break
+    return chk
 
 def draw_result(lmfit_result_items,h):
     A = np.array([])
@@ -64,7 +78,7 @@ def draw_result(lmfit_result_items,h):
 ######## Class fluorescnce decay ############
 
 class fl_decay(): # class for storing lifetime spectro data
-    def __init__(self, file_name, decay_data):
+    def __init__(self, file_name, decay_data,h):
         self.file_name = file_name
         self.decay_data = decay_data
         self.raw_data = decay_data
@@ -73,6 +87,7 @@ class fl_decay(): # class for storing lifetime spectro data
         self.peak = np.argmax(self.decay_data)  
         self.result = np.empty_like(decay_data)
         self.best_fit = np.empty_like(decay_data)
+        self.h = h
     def update(fl_decay):
         fl_decay.norm_decay_data = (fl_decay.decay_data-fl_decay.bg)/max(fl_decay.decay_data-fl_decay.bg)
     def over_sample(fl_decay): #TODO: not working

@@ -11,25 +11,24 @@ import lifetime_spectro_analysis
 st.title("Exponential decay lmfit")
 
 #### Upload area####
-col1, col2 = st.columns(2)
-with col1:
-    file_type = st.selectbox("Select File Type",['QuTAG MC','TDC7200','PicoHarp'])
-with col2:
-    h = st.number_input(label='Bin width (ps)',min_value=0,step=1,value=0)/1000 # bin width in ns
+file_type = st.selectbox("Select File Type",['QuTAG MC','TDC7200','PicoHarp'])
 uploaded_files = st.file_uploader("Choose a txt file", accept_multiple_files=True) # create upload box
-if uploaded_files and h != 0: # if there is/are file(s) uploaded
+if uploaded_files: # if there is/are file(s) uploaded
     n_components = st.sidebar.number_input("Number of decay components", value=1,step=1,max_value=4,min_value=1) # select number of exp component
     tot_file = len(uploaded_files)
     # st.write(str(tot_file)+' files uploaded') # for checking total files
     decay = [] #
-    try:
-        for file_name in uploaded_files: # read all files
-            data = myfunctions.lifetme_spectro_upload(file_name, file_type)
-            decay.append(myfunctions.fl_decay(file_name=file_name.name, decay_data=data[:,1])) # store in the fl_decay class
-        data_len = len(data[:,1])
-    except:
-        st.error('File type error')
+    # try:
+    for file_name in uploaded_files: # read all files
+        data, h = myfunctions.lifetme_spectro_upload(file_name, file_type)
+        decay.append(myfunctions.fl_decay(file_name=file_name.name, decay_data=data, h=h)) # store in the fl_decay class
+    data_len = len(data)
+    if tot_file > 1 and myfunctions.check_h(decay=decay,tot_file=tot_file): # check if bin width are identical in all files
+        st.error('Bin width are not identical')
         st.stop()
+    # except:
+    #     st.error('File type error')
+    #     st.stop()
 
     #### Over Sample ####
     en_oversample = st.sidebar.checkbox('Oversample x4 (Not working)') #TODO:
@@ -93,7 +92,6 @@ if uploaded_files and h != 0: # if there is/are file(s) uploaded
     st.download_button(label='Download fitted data', data=csv, file_name='Fitted_data.csv',mime="text/csv")      
 
     #### Report result ####
-    st.header('Fit report')
     tab = st.tabs([decay[decay_id].file_name for decay_id in range(tot_file)])
     for decay_id in range(tot_file):
         with tab[decay_id]:
