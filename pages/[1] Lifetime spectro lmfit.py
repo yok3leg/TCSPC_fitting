@@ -9,6 +9,7 @@ import myfunctions
 import lifetime_spectro_analysis
 
 st.title("Exponential decay lmfit")
+st.markdown('Example data can be found here: https://github.com/yok3leg/TCSPC_fitting/tree/main/Example%20Data')
 
 #### Upload area####
 file_type = st.selectbox("Select File Type",['QuTAG MC','TDC7200','PicoHarp'])
