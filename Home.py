@@ -6,3 +6,9 @@ st.set_page_config(
 )
 
 st.title("Main Page")
+st.header('How to use')
+st.markdown('''
+            - Select mode on the sidebar
+            - Follow the instruction
+            - 
+            ''')

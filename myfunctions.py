@@ -75,6 +75,35 @@ def draw_result(lmfit_result_items,h):
         fig = px.bar(df2, y='tau',width=300,color_discrete_sequence=px.colors.qualitative.Pastel_r)
         st.plotly_chart(fig)    
 
+def irf_select(decay):
+    name = np.array([])
+    for i in range(len(decay)):
+        name = np.append(name,decay[i].file_name)
+    data_df = pd.DataFrame(
+        {
+            "favorite": [True, False],
+            "widgets": name,
+        }
+    )
+    irf_select = st.data_editor(
+        data_df,
+        column_config={
+            "favorite": st.column_config.CheckboxColumn(
+                default=False,
+            )
+        },
+        disabled=["widgets"],
+        hide_index=True,
+    )
+    if sum(irf_select['favorite']) > 1:
+        st.error('Only one IRF can be slected')
+        irf_select['favorite'] = False
+        st.stop()
+    else:
+        irf = np.array((irf_select['widgets'][irf_select['favorite']==True]))
+        st.write(irf)
+    return irf_index
+
 ######## Class fluorescnce decay ############
 
 class fl_decay(): # class for storing lifetime spectro data
